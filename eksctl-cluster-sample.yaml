@@ -1,0 +1,31 @@
+# eksctl create cluster -f cluster.yaml
+---
+  apiVersion: eksctl.io/v1alpha5
+  kind: ClusterConfig
+  
+  metadata:
+    name: dncEKS
+    region: ap-southeast-1
+  
+  iam:
+    withOIDC: true
+
+  nodeGroups:
+    - name: dnc-ng2
+      instanceType: m5.large
+      minSize: 3
+      maxSize: 3
+      volumeSize: 250
+      volumeType: gp2
+      labels:
+        nodegroup-type: dotnet-workloads
+      iam:
+        withAddonPolicies:
+          albIngress: true
+          appMesh: true
+          xRay: true
+          cloudWatch: true
+          autoScaler: true
+          ebs: true
+          fsx: true
+          efs: true

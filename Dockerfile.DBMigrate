@@ -1,0 +1,18 @@
+# FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1-alpine
+WORKDIR /app
+
+# copy csproj and restore as distinct layers
+COPY src/*.sln .
+COPY src/BookWormClub/*.csproj ./BookWormClub/
+RUN dotnet restore
+
+# copy everything else and build app
+COPY src/BookWormClub/. ./BookWormClub/
+WORKDIR /app/BookWormClub
+RUN  dotnet tool install --global dotnet-ef --version 3.1.1 
+
+ENV PATH $PATH:"/root/.dotnet/tools"
+# CMD dotnet ef migrations add CreateIdentitySchema && dotnet ef migrations add InitialCreate && dotnet ef database update
+# docker run -e ASPNETCORE_ENVIRONMENT=Development --link mysql:mysql bm \ 
+# /bin/sh -c "dotnet ef migrations add CreateIdentitySchema && dotnet ef migrations add InitialCreate && dotnet ef database update"

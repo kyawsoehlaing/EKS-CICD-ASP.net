@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: bookwormap-service
+spec:
+  selector:
+    app: bookwormap-pod
+  ports:
+    - name: web
+      port: 80
+      targetPort: 5000
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bookwormap-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: bookwormap-pod
+  template:
+    metadata:
+      labels:
+        app: bookwormap-pod
+    spec:
+      containers:
+      - name: bookwormap-pod
+        image: CONTAINER_IMAGE
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "1024Mi"
+            cpu: "0.5"
+          limits:
+            memory: "1024Mi"
+            cpu: "0.5"
+        env:
+          - name: ASPNETCORE_ENVIRONMENT
+            value: Production
+          - name: ConnectionStrings__DefaultConnection
+            valueFrom:
+              secretKeyRef:
+                name: dbsecret
+                key: ConnectionStrings__DefaultConnection
+        
