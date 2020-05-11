@@ -12,7 +12,20 @@ WORKDIR /app/BookWormClub
 RUN dotnet publish -c Release -o out
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS runtime
+
+ENV USERNAME=appuser
+ENV GROUP=grp
+ENV HOME=/home/${USERNAME}
+RUN mkdir -p ${HOME}
+
+# Create a group and an user (system account) which will execute the app
+RUN groupadd -r ${GROUP} &&\
+    useradd -r -g ${GROUP} -d ${HOME} -s /sbin/nologin -c "Docker image user" ${USERNAME}
+
+
 WORKDIR /app
 COPY --from=build /app/BookWormClub/out ./
 ENV ASPNETCORE_URLS http://*:5000
+
+USER ${USERNAME}
 ENTRYPOINT ["dotnet", "BookWormClub.dll"]
