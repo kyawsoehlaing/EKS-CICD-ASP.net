@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Data.SqlClient;
 using Pomelo.EntityFrameworkCore.MySql;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace BookWormClub
 {

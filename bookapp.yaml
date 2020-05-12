@@ -26,6 +26,8 @@ spec:
         app: bookwormap-pod
     spec:
       containers:
+      - name: nginx
+        image: NGINX_IMAGE
       - name: bookwormap-pod
         image: CONTAINER_IMAGE
         imagePullPolicy: Always
