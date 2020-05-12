@@ -12,18 +12,18 @@ phases:
       commands:
         - TAG="$REPOSITORY_NAME.$REPOSITORY_BRANCH.$ENVIRONMENT_NAME.$(date +%Y-%m-%d.%H.%M.%S).$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
         - sed -i 's@CONTAINER_IMAGE@'"$REPOSITORY_URI:$TAG"'@' bookapp.yaml
-        - sed -i 's@NGINX_IMAGE@'"$REPOSITORY_URI:nginx-$TAG"'@' bookapp.yaml
+        # - sed -i 's@NGINX_IMAGE@'"$REPOSITORY_URI:nginx-$TAG"'@' bookapp.yaml
         - $(aws ecr get-login --no-include-email)
         - export KUBECONFIG=$HOME/.kube/config
   build:
     commands:
       - docker build --tag $REPOSITORY_URI:$TAG .
-      - cd nginx && docker build --tag $REPOSITORY_URI:nginx-$TAG . && cd ..
+      # - cd nginx && docker build --tag $REPOSITORY_URI:nginx-$TAG . && cd ..
 
   post_build:
     commands:
       - docker push $REPOSITORY_URI:$TAG
-      - docker push $REPOSITORY_URI:nginx-$TAG
+      # - docker push $REPOSITORY_URI:nginx-$TAG
       - CREDENTIALS=$(aws sts assume-role --role-arn $EKS_KUBECTL_ROLE_ARN --role-session-name codebuild-kubectl --duration-seconds 900)
       - export AWS_ACCESS_KEY_ID="$(echo ${CREDENTIALS} | jq -r '.Credentials.AccessKeyId')"
       - export AWS_SECRET_ACCESS_KEY="$(echo ${CREDENTIALS} | jq -r '.Credentials.SecretAccessKey')"
