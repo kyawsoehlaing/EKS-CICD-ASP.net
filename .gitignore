@@ -6,3 +6,5 @@ cdk.out
 MYREADME.md
 dbsecret.yml
 eksctl-cluster.yaml
+cwagent-fluentd-quickstart.yaml
+dbm.yml
