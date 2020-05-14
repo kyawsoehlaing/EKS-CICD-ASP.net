@@ -8,7 +8,7 @@ spec:
   ports:
     - name: web
       port: 80
-      targetPort: 5000
+      targetPort: 80
   type: LoadBalancer
 ---
 apiVersion: apps/v1
@@ -26,17 +26,17 @@ spec:
         app: bookwormap-pod
     spec:
       containers:
-      # - name: nginx
-      #   image: NGINX_IMAGE
+      - name: nginx
+        image: NGINX_IMAGE
       - name: bookwormap-pod
         image: CONTAINER_IMAGE
         imagePullPolicy: Always
         resources:
           requests:
-            memory: "256Mi"
+            memory: "512Mi"
             cpu: "500m"
           limits:
-            memory: "256Mi"
+            memory: "512Mi"
             cpu: "500m"
         env:
           - name: ASPNETCORE_ENVIRONMENT
